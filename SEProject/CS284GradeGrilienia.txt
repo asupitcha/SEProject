@@ -1,0 +1,4 @@
+3
+Assign,20
+MidTerm,40
+Final,40
