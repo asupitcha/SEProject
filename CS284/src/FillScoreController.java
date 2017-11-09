@@ -5,13 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.swing.JOptionPane;
+
 public class FillScoreController {
 	private String[][] data;
 	private String fileName;
 	private int row,column;
 	private int gradeGrilienia;
 	private String[] g;
-	private String course;
+	private int[] maxScore;
 	
 	public FillScoreController(String fileName, String courseName) {		
 		BufferedReader bf;
@@ -69,6 +71,13 @@ public class FillScoreController {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		maxScore = new int[gradeGrilienia];
+		String[] str;
+		for(int j=0; j<gradeGrilienia; j++){
+			str = g[j].split(",");
+			maxScore[j] = Integer.parseInt(str[1]);
+		}
 		return g;
 	}
 	public void readFile(){
@@ -107,7 +116,16 @@ public class FillScoreController {
 		}
 		out.close();
 	}
-	public void addScore(String score, int x, int y){
-		data[x][y] = score;
+	public boolean addScore(String score, int x, int y){
+		try{
+			if(((Double.parseDouble(score) <= maxScore[y-3]) || (Integer.parseInt(score) <= maxScore[y-3])) && ((Double.parseDouble(score) >= 0) || (Integer.parseInt(score) >= 0))){
+				data[x][y] = score;
+				return true;
+			}
+			else
+				throw new NumberFormatException();
+		}catch(NumberFormatException e){
+			return false;
+		}		
 	}
 }

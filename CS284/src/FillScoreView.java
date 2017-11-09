@@ -24,7 +24,6 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 	private DefaultTableModel model;
 	private FillScoreController fillcontroller;
 	private String[] gradeGrilienia;
-	private int[] maxScore;
 	
 	public FillScoreView(String courseName) {
 		mainPanel = new JPanel();
@@ -39,7 +38,6 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		
 		fillcontroller = new FillScoreController(course.getText() + "Score.txt", courseName);
 		gradeGrilienia = new String[fillcontroller.readFileGradeGrilienia(course.getText() + "GradeGrilienia.txt").length];
-		maxScore = new int[fillcontroller.readFileGradeGrilienia(course.getText() + "GradeGrilienia.txt").length];
 		gradeGrilienia(fillcontroller.readFileGradeGrilienia(course.getText() + "GradeGrilienia.txt"));
 	
 		
@@ -88,7 +86,6 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		for(int i=0; i<g.length; i++){
 			str = g[i].split(",");
 			gradeGrilienia[i] = str[0] + "(" + str[1] + "%)";
-			maxScore[i] = Integer.parseInt(str[1]);
 		}
 	}
 	public void addColumn(){
@@ -99,17 +96,11 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		if(table.getSelectedColumn() > 2){
-			try{
-				String score = JOptionPane.showInputDialog(null, "Input Score");
-				if((Double.parseDouble(score) <= maxScore[table.getSelectedColumn()-3]) || (Integer.parseInt(score) <= maxScore[table.getSelectedColumn()-3])){
-					fillcontroller.addScore(score, table.getSelectedRow(),  table.getSelectedColumn());
-					table.getModel().setValueAt(score, table.getSelectedRow(), table.getSelectedColumn());
-				}
-				else
-					throw new NumberFormatException();
-			}catch(NumberFormatException e){
-				JOptionPane.showMessageDialog(null, "Invalid value");
-			}		
+			String score = JOptionPane.showInputDialog(null, "Input Score");
+			if(fillcontroller.addScore(score, table.getSelectedRow(),  table.getSelectedColumn()))
+				table.getModel().setValueAt(score, table.getSelectedRow(), table.getSelectedColumn());
+			else
+				JOptionPane.showMessageDialog(null, "Invalid value");		
 		}
 	}	
 	@Override
