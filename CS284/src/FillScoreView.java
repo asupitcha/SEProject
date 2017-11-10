@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class FillScoreView extends JFrame implements ListSelectionListener, ActionListener{
 	private JPanel mainPanel;
 	private JLabel course;
+	private JButton submit;
 	private JButton save;
 	private JButton cancel;
 	private JTable table;
@@ -58,10 +59,13 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		JPanel buttonPanel = new JPanel();
 		JPanel bPanel = new JPanel();
 		buttonPanel.setLayout(new BorderLayout());
+		submit = new JButton("Submit");
+		submit.addActionListener(this);
 		save = new JButton("Save");
 		save.addActionListener(this);
 		cancel = new JButton("Cancel");
 		cancel.addActionListener(this);
+		bPanel.add(submit); 
 		bPanel.add(save); 
 		bPanel.add(cancel); 
 		buttonPanel.add(bPanel, BorderLayout.EAST);
@@ -77,6 +81,12 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		
 	}
 	public void addData(){
+		if(fillcontroller.getStatus().equals("true")){
+			table.setEnabled(false);
+			submit.setEnabled(false);
+			save.setEnabled(false);
+			cancel.setEnabled(false);
+		}
 		for(int i=0; i<fillcontroller.getRow(); i++){
 			model.addRow(fillcontroller.getData()[i]);
 		}
@@ -95,12 +105,14 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 	}
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
-		if(table.getSelectedColumn() > 2){
-			String score = JOptionPane.showInputDialog(null, "Input Score");
-			if(fillcontroller.addScore(score, table.getSelectedRow(),  table.getSelectedColumn()))
-				table.getModel().setValueAt(score, table.getSelectedRow(), table.getSelectedColumn());
-			else
-				JOptionPane.showMessageDialog(null, "Invalid value");		
+		if(fillcontroller.getStatus().equals("false")){
+			if(table.getSelectedColumn() > 2){
+				String score = JOptionPane.showInputDialog(null, "Input Score");
+				if(fillcontroller.addScore(score, table.getSelectedRow(),  table.getSelectedColumn()))
+					table.getModel().setValueAt(score, table.getSelectedRow(), table.getSelectedColumn());
+				else
+					JOptionPane.showMessageDialog(null, "Invalid value");		
+			}
 		}
 	}	
 	@Override
@@ -112,6 +124,16 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
+		}
+		else if(e.getActionCommand().equals("Submit")){
+			JOptionPane.showConfirmDialog(null, "If you submit grade \n you'll no longer change score");
+			try {
+				fillcontroller.setStatus("true");
+				fillcontroller.saveScoreFile(course.getText() + "Score.txt");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			dispose();
 		}
 		else{
 			dispose();

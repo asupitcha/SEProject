@@ -5,8 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.swing.JOptionPane;
-
 public class FillScoreController {
 	private String[][] data;
 	private String fileName;
@@ -14,20 +12,27 @@ public class FillScoreController {
 	private int gradeGrilienia;
 	private String[] g;
 	private int[] maxScore;
+	private String status;
+	private String course;
 	
 	public FillScoreController(String fileName, String courseName) {		
 		BufferedReader bf;
 		String line = "";
 		String[] str;
 		this.fileName = fileName;
+		course = courseName;
 		
 		try {
+			status = "false";
 			bf = new BufferedReader(new FileReader(new File(fileName)));
+			status = bf.readLine();
 			while((line = bf.readLine()) != null){
 				str = line.split(" ");
 				column = str.length;
 				row++;
 			}
+			readFileGradeGrilienia(courseName + "GradeGrilienia.txt");
+			readFile();
 			bf.close();
 		} catch (FileNotFoundException e) {
 			try {
@@ -51,6 +56,12 @@ public class FillScoreController {
 	}
 	public int getRow(){
 		return row;
+	}
+	public String getStatus(){
+		return status;
+	}
+	public void setStatus(String s){
+		status = s;
 	}
 	public String[] readFileGradeGrilienia(String fileName){
 		BufferedReader bf;
@@ -89,6 +100,7 @@ public class FillScoreController {
 
 		try {
 			bf = new BufferedReader(new FileReader(new File(fileName)));
+			if(fileName.equals(course+ "Score.txt")) status = bf.readLine();
 			while((line = bf.readLine()) != null){
 				str = line.split(" ");
 				for(int i=0; i<str.length; i++){
@@ -107,6 +119,7 @@ public class FillScoreController {
 	}
 	public void saveScoreFile(String filename) throws FileNotFoundException{
 		PrintWriter out = new PrintWriter(filename);
+		out.println(status);
 		for(int i=0; i<row; i++){
 			for(int j=0; j<column+gradeGrilienia; j++){
 				if(data[i][j] == null) out.print(" ");
@@ -126,6 +139,8 @@ public class FillScoreController {
 				throw new NumberFormatException();
 		}catch(NumberFormatException e){
 			return false;
-		}		
+		}catch(NullPointerException e){
+			return false;
+		}
 	}
 }
