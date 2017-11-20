@@ -1,5 +1,5 @@
 4
-Assign,10
-test,10
-MidTerm,40
-Final,40
+Assign,20,10
+test,30,10
+MidTerm,70,35
+Final,80,45
