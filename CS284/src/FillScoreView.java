@@ -50,7 +50,6 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		table = new JTable(model);
 		table.setRowSelectionAllowed(false);	
 		table.getSelectionModel().addListSelectionListener(this);
-		table.getAutoResizeMode();
 		mainPanel.add(table);
 		JScrollPane scrollPane = new JScrollPane(table);
 		mainPanel.add(scrollPane);		
@@ -85,7 +84,6 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 			table.setEnabled(false);
 			submit.setEnabled(false);
 			save.setEnabled(false);
-			cancel.setEnabled(false);
 		}
 		for(int i=0; i<fillcontroller.getRow(); i++){
 			model.addRow(fillcontroller.getData()[i]);
@@ -95,7 +93,7 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		String[] str;
 		for(int i=0; i<g.length; i++){
 			str = g[i].split(",");
-			gradeGrilienia[i] = str[0] + "(" + str[1] + "%)";
+			gradeGrilienia[i] = str[0] + "(" + str[1];
 		}
 	}
 	public void addColumn(){
@@ -105,6 +103,9 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 	}
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
+		/*int row = table.getSelectedRow();
+		int column = table.getSelectedColumn();
+		fillcontroller.addScore(table.getCellEditor(row, column).toString(), row, column);*/
 		if(fillcontroller.getStatus().equals("false")){
 			if(table.getSelectedColumn() > 2){
 				String score = JOptionPane.showInputDialog(null, "Input Score");
@@ -129,7 +130,7 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 			JOptionPane.showConfirmDialog(null, "If you submit grade \n you'll no longer change score");
 			try {
 				fillcontroller.setStatus("true");
-				fillcontroller.saveScoreFile(course.getText() + "Score.txt");
+				fillcontroller.submitScoreFile(course.getText() + "Score.txt");
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}

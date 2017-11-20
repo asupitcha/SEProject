@@ -14,6 +14,7 @@ public class FillScoreController {
 	private int[] maxScore;
 	private String status;
 	private String course;
+	private int[] grader;
 	
 	public FillScoreController(String fileName, String courseName) {		
 		BufferedReader bf;
@@ -27,7 +28,7 @@ public class FillScoreController {
 			bf = new BufferedReader(new FileReader(new File(fileName)));
 			status = bf.readLine();
 			while((line = bf.readLine()) != null){
-				str = line.split(" ");
+				str = line.split("/");
 				column = str.length;
 				row++;
 			}
@@ -39,12 +40,13 @@ public class FillScoreController {
 				this.fileName = courseName + "StudentList.txt";
 				bf = new BufferedReader(new FileReader(new File(this.fileName)));
 				while((line = bf.readLine()) != null){
-					str = line.split(" ");
+					str = line.split("/");
 					column = str.length;
 					row++;
 				}
 				bf.close();
 				readFileGradeGrilienia(courseName + "GradeGrilienia.txt");
+				column += gradeGrilienia;
 				readFile();
 				saveScoreFile(courseName + "Score.txt");
 			} catch (IOException e1) {
@@ -57,12 +59,22 @@ public class FillScoreController {
 	public int getRow(){
 		return row;
 	}
+	public String[][] getData(){
+		return data;
+	}
 	public String getStatus(){
 		return status;
+	}
+	public int[] getMaxScore(){
+		return maxScore;
 	}
 	public void setStatus(String s){
 		status = s;
 	}
+	public int[] getGrader(){
+		return grader;
+	}
+	
 	public String[] readFileGradeGrilienia(String fileName){
 		BufferedReader bf;
 		String line = "";
@@ -84,15 +96,17 @@ public class FillScoreController {
 		}
 		
 		maxScore = new int[gradeGrilienia];
+		grader = new int[gradeGrilienia];
 		String[] str;
 		for(int j=0; j<gradeGrilienia; j++){
 			str = g[j].split(",");
 			maxScore[j] = Integer.parseInt(str[1]);
+			grader[j] = Integer.parseInt(str[2]);			
 		}
 		return g;
 	}
 	public void readFile(){
-		data = new String[row][column+gradeGrilienia];
+		data = new String[row][column];
 		BufferedReader bf;
 		String line = "";
 		String[] str;
@@ -102,7 +116,7 @@ public class FillScoreController {
 			bf = new BufferedReader(new FileReader(new File(fileName)));
 			if(fileName.equals(course+ "Score.txt")) status = bf.readLine();
 			while((line = bf.readLine()) != null){
-				str = line.split(" ");
+				str = line.split("/");
 				for(int i=0; i<str.length; i++){
 					data[row][i] = str[i];
 				} row++;
@@ -114,20 +128,42 @@ public class FillScoreController {
 			e.printStackTrace();
 		}
 	}
-	public String[][] getData(){
-		return data;
-	}
 	public void saveScoreFile(String filename) throws FileNotFoundException{
 		PrintWriter out = new PrintWriter(filename);
 		out.println(status);
 		for(int i=0; i<row; i++){
-			for(int j=0; j<column+gradeGrilienia; j++){
-				if(data[i][j] == null) out.print(" ");
-				else out.print(data[i][j] + " ");
+			for(int j=0; j<column; j++){
+				if(data[i][j] == null){
+					if(j == column-1) out.print(" ");
+					else out.print(" /");
+				}
+				else {
+					if(j == (column)-1) out.print(data[i][j]);
+					else out.print(data[i][j] + "/");
+				}
 			}
 			out.println();
 		}
 		out.close();
+	}
+	public void submitScoreFile(String filename) throws FileNotFoundException{
+		PrintWriter out = new PrintWriter(filename);
+		out.println(status);
+		for(int i=0; i<row; i++){
+			for(int j=0; j<column; j++){
+				if(data[i][j].equals(" ")){
+					if(j == column-1) out.print("0");
+					else out.print("0/");
+				}
+				else {
+					if(j == (column)-1) out.print(data[i][j]);
+					else out.print(data[i][j] + "/");
+				}
+			}
+			out.println();
+		}
+		out.close();
+		new GraderController(getMaxScore(), getGrader(), getData(), course);
 	}
 	public boolean addScore(String score, int x, int y){
 		try{
