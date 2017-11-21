@@ -2,18 +2,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class GraderController {
-	private int[] percent;
-	private int[] max;
-	private String[][] data;
 	private String[][] grader;
 	private String course;
+	private String[][] data;
+	private CalculateScoreController csc;
 	
-	public GraderController(int[] m,int[] g, String[][] d, String course) throws FileNotFoundException {
-		max = m;
-		percent = g;
-		data = d;
+	public GraderController(int[] max,int[] percent, String[][] data, String course) throws FileNotFoundException {
+		this.data = data;
 		this.course = course;
-		calculateSumScore();
+		csc = new CalculateScoreController(max, percent, data);
+		saveScore();
 		saveScoreFile();
 	}
 	public String calculateGrade(double score){
@@ -26,24 +24,12 @@ public class GraderController {
 		else if(score >= 74 && score < 81) return "B+";
 		else return "A";
 	}
-	public void calculateSumScore(){
-		double score[] = new double[data.length];
-		double sum = 0;
-		
+	public void saveScore(){
+		grader = new String[data.length][2];
 		for(int i=0; i<data.length; i++){
-			for(int j=data[0].length-4, k=0; j<data[0].length; j++,k++){
-				sum += Double.parseDouble(data[i][j])*((double)percent[k]/(double)max[k]);
-			}
-			score[i] = sum;
-			sum = 0;
-		}
-		
-		grader = new String[data.length][4];
-		for(int i=0; i<data.length; i++){
-			for(int j=0; j<4; j++){
-				if(j == 3) grader[i][j] = calculateGrade(score[i]);
-				else grader[i][j] = data[i][j];
-			}
+			grader[i][0] = data[i][0];
+			grader[i][1] = calculateGrade(csc.calculateSumScore()[i]);
+			
 		}
 	}
 	public void saveScoreFile() throws FileNotFoundException{
