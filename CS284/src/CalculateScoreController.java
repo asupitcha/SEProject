@@ -1,3 +1,4 @@
+package project;
 
 public class CalculateScoreController {
 	private int[] percent;
