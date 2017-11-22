@@ -15,11 +15,11 @@ public class LoginController {
 		BufferedReader bf = new BufferedReader(new FileReader(new File("Password.txt")));
 		while((line = bf.readLine()) != null){
 			str = line.split(",");
-			addUser(str[0], str[1], str[2]);
+			addUser(str[0], str[1], str[2], str[3]);
 		}	
 	}
-	public void addUser(String user, String pass, String name){
-		list.add(new User(user, pass, name));		
+	public void addUser(String user, String pass, String name, String lastname){
+		list.add(new User(user, pass, name, lastname));		
 	}
 	public boolean checkID(String user, String pass){
 		for(int i=0; i<list.size(); i++){

@@ -52,7 +52,11 @@ public class FillScoreView extends JFrame implements ListSelectionListener, Acti
 		table.getSelectionModel().addListSelectionListener(this);
 		mainPanel.add(table);
 		JScrollPane scrollPane = new JScrollPane(table);
-		mainPanel.add(scrollPane);		
+		mainPanel.add(scrollPane);
+		
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getColumnModel().getColumn(1).setPreferredWidth(150);
+		table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		
 		//Button
 		JPanel buttonPanel = new JPanel();

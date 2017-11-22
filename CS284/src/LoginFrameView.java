@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 
 
 public class LoginFrameView extends JFrame{
-	private boolean check;
 
 	public LoginFrameView() throws IOException  {
 	

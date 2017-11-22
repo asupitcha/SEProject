@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -79,7 +78,7 @@ public class LoginPanelView extends JPanel implements ActionListener{
 		String password = new String(pass.getPassword());
 		if(loginCon.checkID(user.getText(), password)){
 			SelectCourseView scv = new SelectCourseView();
-			scv.setNameAndLast(loginCon.getUser(user.getText()).getName());
+			scv.setNameAndLast(loginCon.getUser(user.getText()).getName(), loginCon.getUser(user.getText()).getLastname());
 			setCheck(true);
 		}
 		else{

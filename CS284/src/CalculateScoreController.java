@@ -3,6 +3,8 @@ public class CalculateScoreController {
 	private int[] percent;
 	private int[] max;
 	private String[][] data;
+	private double mean;
+	private double sd;
 	
 	public CalculateScoreController(int[] max,int[] percent, String[][] data) {
 		this.max = max;
@@ -21,5 +23,27 @@ public class CalculateScoreController {
 			sum = 0;
 		}
 		return score;
+	}
+	public double calculateMean(){
+		double score[] = calculateSumScore();
+		double sum = 0;
+		
+		for(int i=0; i<score.length; i++){
+			sum += score[i];
+		}
+		mean = sum / (double)score.length;
+		
+		return mean;
+	}
+	public double calculateSD(){
+		double score[] = calculateSumScore();
+		double sum = 0;
+		
+		for(int i=0; i<score.length; i++){
+			sum += Math.pow(score[i]-mean, 2);
+		}
+		
+		sd = Math.sqrt(sum/(double)(data.length-1));
+		return sd;
 	}
 }
