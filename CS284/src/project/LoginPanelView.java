@@ -1,4 +1,3 @@
-package project;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
@@ -79,7 +78,8 @@ public class LoginPanelView extends JPanel implements ActionListener{
 		String password = new String(pass.getPassword());
 		if(loginCon.checkID(user.getText(), password)){
 			SelectCourseView scv = new SelectCourseView();
-			scv.setNameAndLast(loginCon.getUser(user.getText()).getName(), loginCon.getUser(user.getText()).getLastname());
+			scv.setNameUser(loginCon.getUser(user.getText()).getName());
+			scv.setUpComplete();
 			setCheck(true);
 		}
 		else{

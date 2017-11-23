@@ -1,4 +1,3 @@
-package project;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -22,13 +21,13 @@ public class SelectCourseView extends JFrame{
 	private JLabel lastName;
 	private boolean isSelect = false;
 	private SelectCourseController scc;
+	protected String nameUser = "";
 	
 	public SelectCourseView(){
 		setLayout(new BorderLayout());
 		//setContentPane(new JLabel(new ImageIcon("dome.jpg")));
 		add(setUpName() , BorderLayout.NORTH);
 		add(setUp());
-		setUpComplete();
 		setSize(600,200);
 		//pack();
 		setTitle("SlectCourse");
@@ -89,8 +88,14 @@ public class SelectCourseView extends JFrame{
 		this.name.setText(name);
 		this.lastName.setText(lastName);
 	}
+	public void setNameUser(String input){
+		nameUser = input;
+	}
+	public String getNameUser(){
+		return nameUser;
+	}
 	public void setUpComplete(){
-		scc = new SelectCourseController("T");
+		scc = new SelectCourseController(nameUser);
 		scc.find();
 		setNameAndLast(scc.getName(), scc.getLastName());
 		ArrayList<String> courseId = scc.getAllCourseId();
